@@ -1,4 +1,4 @@
-package WebserviceMotEnWebshop.demo.utils;
+package WebserviceMotEnWebshop.demo.modell;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;

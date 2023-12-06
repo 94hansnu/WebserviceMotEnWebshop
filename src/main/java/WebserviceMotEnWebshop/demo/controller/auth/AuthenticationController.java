@@ -1,9 +1,9 @@
 package WebserviceMotEnWebshop.demo.controller.auth;
 
-import WebserviceMotEnWebshop.demo.model.KundTabell;
+import WebserviceMotEnWebshop.demo.table.Kund;
 import WebserviceMotEnWebshop.demo.service.AuthenticationService;
-import WebserviceMotEnWebshop.demo.utils.LoginResponse;
-import WebserviceMotEnWebshop.demo.utils.Registration;
+import WebserviceMotEnWebshop.demo.modell.LoginResponse;
+import WebserviceMotEnWebshop.demo.modell.Registration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +16,7 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public KundTabell registerUser(@RequestBody Registration body){
-
+    public Kund registerUser(@RequestBody Registration body){
         return authenticationService.registerUser(body.getUsername(), body.getPassword());
     }
     @PostMapping("/login")

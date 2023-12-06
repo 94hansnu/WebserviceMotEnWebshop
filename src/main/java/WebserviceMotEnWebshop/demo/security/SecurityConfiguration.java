@@ -1,6 +1,6 @@
 package WebserviceMotEnWebshop.demo.security;
 
-import WebserviceMotEnWebshop.demo.utils.RSAKeyProperties;
+import WebserviceMotEnWebshop.demo.modell.RSAKeyProperties;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

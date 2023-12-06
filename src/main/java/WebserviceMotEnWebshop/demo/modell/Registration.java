@@ -1,4 +1,4 @@
-package WebserviceMotEnWebshop.demo.utils;
+package WebserviceMotEnWebshop.demo.modell;
 
 public class Registration {
     private String username;

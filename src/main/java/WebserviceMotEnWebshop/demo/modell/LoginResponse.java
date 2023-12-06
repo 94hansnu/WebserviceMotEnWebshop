@@ -1,9 +1,9 @@
-package WebserviceMotEnWebshop.demo.utils;
+package WebserviceMotEnWebshop.demo.modell;
 
-import WebserviceMotEnWebshop.demo.model.KundTabell;
+import WebserviceMotEnWebshop.demo.table.Kund;
 
 public class LoginResponse {
-    private KundTabell user;
+    private Kund user;
 
     private String jwt;
 
@@ -11,15 +11,15 @@ public class LoginResponse {
         super();
     }
 
-    public LoginResponse(KundTabell user, String jwt){
+    public LoginResponse(Kund user, String jwt){
         this.user = user;
         this.jwt = jwt;
     }
-    public KundTabell getUser(){
+    public Kund getUser(){
         return this.user;
     }
 
-    public void setUser(KundTabell user){
+    public void setUser(Kund user){
         this.user = user;
     }
 
