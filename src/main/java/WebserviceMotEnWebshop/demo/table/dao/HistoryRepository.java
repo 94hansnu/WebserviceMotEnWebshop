@@ -1,4 +1,4 @@
 package WebserviceMotEnWebshop.demo.table.dao;
 
-public interface KundRepository {
+public interface HistoryRepository {
 }
