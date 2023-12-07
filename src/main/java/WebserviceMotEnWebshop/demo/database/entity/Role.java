@@ -12,7 +12,6 @@ import org.springframework.security.core.GrantedAuthority;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Role extends BaseEntity implements GrantedAuthority {
-    @NonNull
     private String authority;
     @Override
     public String getAuthority() {
