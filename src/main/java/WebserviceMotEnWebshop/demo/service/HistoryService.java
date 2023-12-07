@@ -1,9 +1,7 @@
 package WebserviceMotEnWebshop.demo.service;
 
-import WebserviceMotEnWebshop.demo.table.History;
-import WebserviceMotEnWebshop.demo.table.dao.HistoryRepository;
+import WebserviceMotEnWebshop.demo.entity.dao.HistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

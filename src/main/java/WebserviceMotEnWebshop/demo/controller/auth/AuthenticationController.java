@@ -1,6 +1,5 @@
 package WebserviceMotEnWebshop.demo.controller.auth;
 
-import WebserviceMotEnWebshop.demo.table.Customer;
 import WebserviceMotEnWebshop.demo.service.AuthenticationService;
 import WebserviceMotEnWebshop.demo.modell.LoginResponse;
 import WebserviceMotEnWebshop.demo.modell.Registration;

@@ -1,7 +1,5 @@
 package WebserviceMotEnWebshop.demo.modell;
 
-import WebserviceMotEnWebshop.demo.table.Customer;
-
 public class LoginResponse {
     private Customer user;
 

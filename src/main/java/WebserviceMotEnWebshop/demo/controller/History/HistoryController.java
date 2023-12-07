@@ -1,7 +1,6 @@
 package WebserviceMotEnWebshop.demo.controller.History;
 
 import WebserviceMotEnWebshop.demo.service.HistoryService;
-import WebserviceMotEnWebshop.demo.table.History;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

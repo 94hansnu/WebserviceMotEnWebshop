@@ -1,7 +1,6 @@
 package WebserviceMotEnWebshop.demo.controller.Article;
 
 import WebserviceMotEnWebshop.demo.service.ArticleService;
-import WebserviceMotEnWebshop.demo.table.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

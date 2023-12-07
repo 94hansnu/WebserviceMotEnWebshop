@@ -1,7 +1,5 @@
 package WebserviceMotEnWebshop.demo.service;
 
-import WebserviceMotEnWebshop.demo.table.Customer;
-import WebserviceMotEnWebshop.demo.table.Role;
 import WebserviceMotEnWebshop.demo.modell.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

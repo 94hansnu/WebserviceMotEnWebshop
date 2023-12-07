@@ -1,7 +1,6 @@
 package WebserviceMotEnWebshop.demo.controller.ShoppingCart;
 
 import WebserviceMotEnWebshop.demo.service.ShoppingCartService;
-import WebserviceMotEnWebshop.demo.table.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
