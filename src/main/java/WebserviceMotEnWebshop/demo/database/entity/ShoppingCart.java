@@ -1,4 +1,4 @@
-package WebserviceMotEnWebshop.demo.entity;
+package WebserviceMotEnWebshop.demo.database.entity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

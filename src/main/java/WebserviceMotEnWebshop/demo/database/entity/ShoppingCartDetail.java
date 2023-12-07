@@ -1,8 +1,7 @@
-package WebserviceMotEnWebshop.demo.entity;
+package WebserviceMotEnWebshop.demo.database.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 

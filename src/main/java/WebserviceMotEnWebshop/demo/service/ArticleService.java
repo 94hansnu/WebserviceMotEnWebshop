@@ -1,6 +1,8 @@
 package WebserviceMotEnWebshop.demo.service;
 
-import WebserviceMotEnWebshop.demo.entity.dao.ArticleRepository;
+
+import WebserviceMotEnWebshop.demo.database.entity.Article;
+import WebserviceMotEnWebshop.demo.database.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +33,7 @@ public class ArticleService {
 
         if (optionalArticle.isPresent()) {
             Article existingArticle = optionalArticle.get();
-            existingArticle.setTitle(updatedArticle.getTitle());
+            existingArticle.setName(updatedArticle.getName());
             existingArticle.setDescription(updatedArticle.getDescription());
             existingArticle.setPrice(updatedArticle.getPrice());
 

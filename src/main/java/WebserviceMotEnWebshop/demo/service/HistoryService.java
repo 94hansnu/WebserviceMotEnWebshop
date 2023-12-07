@@ -1,6 +1,8 @@
 package WebserviceMotEnWebshop.demo.service;
 
-import WebserviceMotEnWebshop.demo.entity.dao.HistoryRepository;
+
+import WebserviceMotEnWebshop.demo.database.entity.History;
+import WebserviceMotEnWebshop.demo.database.repository.HistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
