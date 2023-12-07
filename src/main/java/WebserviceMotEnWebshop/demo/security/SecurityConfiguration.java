@@ -50,7 +50,6 @@ public class SecurityConfiguration {
         return new ProviderManager(daoProvider);
     }
 
-
     @Bean  // denna metod behöver justeras
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http

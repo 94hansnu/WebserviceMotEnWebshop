@@ -1,6 +1,7 @@
 package WebserviceMotEnWebshop.demo.service;
 
 import WebserviceMotEnWebshop.demo.table.Article;
+import WebserviceMotEnWebshop.demo.table.dao.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

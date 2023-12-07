@@ -1,6 +1,7 @@
 package WebserviceMotEnWebshop.demo.service;
 
 import WebserviceMotEnWebshop.demo.table.Article;
+import WebserviceMotEnWebshop.demo.table.dao.ShoppingCartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public class ShoppingCartService {
 
     @Autowired
-   // private ShoppingCartRepository  shoppingCartRepository;
+    private ShoppingCartRepository shoppingCartRepository;
 
     public List<Article> getShoppingCart(String username) {
         return shoppingCartRepository.findByUsername(username);

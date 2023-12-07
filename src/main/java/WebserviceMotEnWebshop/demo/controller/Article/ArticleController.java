@@ -1,5 +1,6 @@
 package WebserviceMotEnWebshop.demo.controller.Article;
 
+import WebserviceMotEnWebshop.demo.service.ArticleService;
 import WebserviceMotEnWebshop.demo.table.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 public class ArticleController {
 
     @Autowired
-    //private ArticleService articleService;
+    private ArticleService articleService;
 
     //GET-förfrågan- Hämta alla artiklar (För alla användare)
     @GetMapping
@@ -37,7 +38,7 @@ public class ArticleController {
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Article> createArticle(@RequestBody Article article) {
-        Article createdArticle  = articleService.createdArticle(article);
+        Article createdArticle  = articleService.createArticle(article);
         return ResponseEntity.ok(createdArticle);
     }
 
