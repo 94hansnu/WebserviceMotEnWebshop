@@ -1,6 +1,6 @@
 package WebserviceMotEnWebshop.demo.service;
 
-import WebserviceMotEnWebshop.demo.table.Kund;
+import WebserviceMotEnWebshop.demo.table.Customer;
 import WebserviceMotEnWebshop.demo.table.Role;
 import WebserviceMotEnWebshop.demo.modell.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
-    public Kund registerUser(String username, String password){
+    public Customer registerUser(String username, String password){
 
         String encodedPassword = passwordEncoder.encode(password);
 
@@ -39,7 +39,7 @@ public class AuthenticationService {
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
 
-        return userRepository.save(new Kund(0, username, encodedPassword, authorities));
+        return userRepository.save(new Customer(0, username, encodedPassword, authorities));
     }
 
     public LoginResponse loginUser(String username, String password){

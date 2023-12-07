@@ -1,4 +1,4 @@
 package WebserviceMotEnWebshop.demo.table;
 
-public class KundKorgDetalj {
+public class ShoppingCart {
 }

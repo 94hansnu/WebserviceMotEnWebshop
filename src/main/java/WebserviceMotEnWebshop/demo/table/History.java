@@ -1,4 +1,4 @@
 package WebserviceMotEnWebshop.demo.table;
 
-public class KundKorg {
+public class History {
 }

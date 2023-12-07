@@ -1,4 +1,4 @@
 package WebserviceMotEnWebshop.demo.table;
 
-public class Historik {
+public class Customer {
 }
