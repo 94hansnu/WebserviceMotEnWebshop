@@ -72,7 +72,7 @@ public class ShoppingCartController {
         }
     }
 
-    //DELETE-förfrågan- Ta bort produkt från kundkorgen
+   /* //DELETE-förfrågan- Ta bort produkt från kundkorgen
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> removeFromCart(@PathVariable Long productId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -84,5 +84,5 @@ public class ShoppingCartController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
 }

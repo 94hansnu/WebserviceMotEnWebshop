@@ -23,6 +23,7 @@ public class HistoryController {
     private HistoryService historyService;
 
     // skapar ny historik
+    /*
     @PostMapping("")
     public ResponseEntity <History> addHistory(Authentication authentication, @RequestBody History history){
         if (isAdmin(authentication)) {
@@ -33,7 +34,7 @@ public class HistoryController {
         }
     }
     // Hämta historik för en specifik användare
-    @GetMapping("/user/{userId}")
+   @GetMapping("/user/{userId}")
     public ResponseEntity<List<History>> getHistoryByUser(@PathVariable Long userId, Authentication authentication) {
         if (isAdmin(authentication) || isUserAuthorized(authentication, userId)) {
             List<History> histories = historyService.getHistoryByUser(userId);
