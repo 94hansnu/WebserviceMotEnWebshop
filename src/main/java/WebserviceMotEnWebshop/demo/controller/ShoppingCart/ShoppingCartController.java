@@ -2,6 +2,7 @@ package WebserviceMotEnWebshop.demo.controller.ShoppingCart;
 
 import WebserviceMotEnWebshop.demo.database.entity.ShoppingCartDetail;
 import WebserviceMotEnWebshop.demo.database.service.ShopService;
+import WebserviceMotEnWebshop.demo.modell.dto.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,11 +31,11 @@ public class ShoppingCartController {
 
     //POST-förfrågan- Lägg till produkt i kundkorgen
     @PostMapping
-    public ResponseEntity<ShoppingCartDetail> addToCart(@RequestBody ShoppingCartDetail shoppingCartDetail) {
+    public ResponseEntity<ShoppingCartDetail> addToCart(@RequestBody CartItem cart) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        ShoppingCartDetail addedItem = shopService.addItem(username, shoppingCartDetail.getArticle(), shoppingCartDetail.getQuantity());
+        ShoppingCartDetail addedItem = shopService.add(username, cart.name(), cart.quantity());
         return ResponseEntity.ok(addedItem);
     }
 
