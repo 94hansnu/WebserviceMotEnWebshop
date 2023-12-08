@@ -76,7 +76,7 @@ public class ShopService {
     }
     @Transactional // denna bör funka bättre, inte klar
     public ShoppingCartDetail add(String username, Long articleId, int quantity) {
-        User user = userRepository.findByUsername(username).orElseThrow();
+        User user = getUser(username);
         Article article = articleRepository.findById(articleId).orElseThrow();
         ShoppingCart cart = getShoppingCart(user);
         Optional<ShoppingCartDetail> existingItem = cart.getCartDetail().stream()
