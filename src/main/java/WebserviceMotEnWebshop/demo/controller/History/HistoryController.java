@@ -67,7 +67,25 @@ public class HistoryController {
 
     // hämta historik för en specifik användare
 
-    @GetMapping("/user/{userId}")
+
+
+    public boolean isAdmin(Authentication authentication) {
+        // Implementation för att kontrollera om användaren är admin
+        return authentication.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    public boolean isUserAuthorized(Authentication authentication, Long userId) {
+        // Kontrollera om användaren är admin, i så fall har den alltid behörighet
+        if (isAdmin(authentication)) {
+            return true;
+        }
+
+        // Jämför användar-ID från autentiseringen med det som tillhandahålls som (userId)
+        String authenticatedUserId = authentication.getName(); // Antag att användar-ID:et är lagrat i användarens namn
+        return authenticatedUserId.equals(String.valueOf(userId));
+    }
+   /* @GetMapping("/user/{userId}")
     public ResponseEntity<List<History>> getHistoryByUser(@PathVariable Long userId, Authentication authentication) {
         if (isAdmin(authentication) || isUserAuthorized(authentication, userId)) {
             User user = new User(); // Skapa ett User-objekt med det specifika användar-ID:et
@@ -90,25 +108,7 @@ public class HistoryController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-    }
-
-    public boolean isAdmin(Authentication authentication) {
-        // Implementation för att kontrollera om användaren är admin
-        return authentication.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
-    }
-
-    public boolean isUserAuthorized(Authentication authentication, Long userId) {
-        // Kontrollera om användaren är admin, i så fall har den alltid behörighet
-        if (isAdmin(authentication)) {
-            return true;
-        }
-
-        // Jämför användar-ID från autentiseringen med det som tillhandahålls som (userId)
-        String authenticatedUserId = authentication.getName(); // Antag att användar-ID:et är lagrat i användarens namn
-        return authenticatedUserId.equals(String.valueOf(userId));
-    }
-
+    }*/
 
 //osäker om den ska vara kvar
   /*
