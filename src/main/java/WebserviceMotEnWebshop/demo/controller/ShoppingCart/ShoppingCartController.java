@@ -71,18 +71,4 @@ public class ShoppingCartController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    //DELETE-förfrågan- Ta bort produkt från kundkorgen
-    @DeleteMapping("/{productId}")
-    public ResponseEntity<Void> removeFromCart(@PathVariable Long productId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        boolean removed = shopService.removeFromCart(username, productId);
-        if (removed) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }
