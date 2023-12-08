@@ -57,7 +57,7 @@ public class ArticleController {
     //DELETE-förfrågan- Radera en artikel (ADMIN)
     @DeleteMapping("/{articleId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteArticle(@PathVariable Long article) {
+    public ResponseEntity<Void> deleteArticle(@PathVariable Long articleId) {
         boolean deleted = articleService.deleteArticle(articleId);
         if (deleted) {
             return ResponseEntity.noContent().build();
