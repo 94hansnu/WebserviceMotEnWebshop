@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -16,15 +17,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ShopService {
-
     private final ArticleRepository articleRepository;
     private final ShoppingCartRepository shoppingCartRepository;
     private final ShoppingCartDetailRepository shoppingCartDetailRepository;
     private final UserRepository userRepository;
     private final HistoryRepository historyRepository;
-    @PersistenceContext
-    EntityManager entityManager;
-
 
     /* Det skall finnas följande funktioner för shop:
 
@@ -40,18 +37,13 @@ public class ShopService {
     * KÖP ALLT I HELA KUNDKORG (SPARA TILL HISTORY -> RADERA RADER I KUNDDETALJKORG) -- <5>
      */
 
-
-
-
-    public List<Article> getArticles(String filter) { // <1>
+    // <1>
+    public List<Article> getArticles(String filter) {
         if (filter == null || filter.isEmpty()) {
             return articleRepository.findAll();
         }
         else return articleRepository.search(filter);
     }
-    // Borde fungera på att lägga till ny, radera och uppdatera kundkorg. Mer testning krävs
-    // Om finns tid, gör egna Exeptions
-
     @Transactional // <2> // klar fungerar för uppdatera antal (+ & -), lägga till nytt
     public ShoppingCartDetail addOrUpdateArticleInCart(String username, String articleName, int quantity) {
         User user = getUser(username);
@@ -78,55 +70,48 @@ public class ShopService {
                 "Använd metoden removeArticleFromCart.");
     }
 
-    @Transactional
-    public List<ShoppingCartDetail> getShoppingCart(String username) { // <3>
+    @Transactional // <3>
+    public List<ShoppingCartDetail> getShoppingCart(String username) {
         User existingUser = getUser(username);
         Optional<ShoppingCart> cart = shoppingCartRepository.findByUser(existingUser);
         if (cart.isPresent()) {
             return cart.get().getCartDetail();
         } else return Collections.emptyList();
     }
-    @Transactional
-    public void removeAllCartItems(String username) { // <4>
+    @Transactional // <4>
+    public void removeAllCartItems(String username) {
         User existingUser = getUser(username);
         ShoppingCart cart = getShoppingCart(existingUser);
         shoppingCartDetailRepository.deleteAllByCart(cart);
     }
-    @Transactional
-    public void removeArticleFromCart(String username, String articleName) { // <6>
+    @Transactional // <6>
+    public void removeArticleFromCart(String username, String articleName) {
         // lägg in kontroll som kollar om artikeln finns i användarens korg
         User existingUser = getUser(username);
         ShoppingCart cart = getShoppingCart(existingUser);
         Article article = getArticle(articleName);
         shoppingCartDetailRepository.deleteByArticle(article);
     }
-    @Transactional
-    public void buy(User user) { // <5>
-        User existingUser = getUser(user);
+    @Transactional // <5>
+    public List<History> buy(String username) {
+        User existingUser = getUser(username);
         ShoppingCart cart = getShoppingCart(existingUser);
+        List<History> historyList = new ArrayList<>();
 
         for (ShoppingCartDetail detail : cart.getCartDetail()) {
             History history = new History();
             history.setUser(existingUser);
-            Article article = getArticle(detail.getArticle());
+            Article article = getArticle(detail.getArticle().getName());
             history.setArticle(article);
             history.setPrice(article.getPrice());
             history.setQuantity(detail.getQuantity());
-            historyRepository.save(history);
+            historyList.add(historyRepository.save(history));
         }
-
         shoppingCartDetailRepository.deleteAllByCart(cart);
         cart.getCartDetail().clear();
         shoppingCartRepository.save(cart);
 
-    }
-    private Article getArticle(Article article) {
-        Optional<Article> existingArticle = articleRepository.findById(article.getId());
-        if (existingArticle.isEmpty()) {
-            throw new RuntimeException("Artikel finns inte.");
-        }
-        Article fetchedArticle = existingArticle.get();
-        return fetchedArticle;
+        return historyList;
     }
     private Article getArticle(String name) {
         Optional<Article> existingArticle = articleRepository.findByName(name);
@@ -136,12 +121,11 @@ public class ShopService {
         Article fetchedArticle = existingArticle.get();
         return fetchedArticle;
     }
-    public User getUser(String username) {
+    private User getUser(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isEmpty()) throw new UsernameNotFoundException("Användaren hittas inte");
         return optionalUser.get();
     }
-
     private ShoppingCart getShoppingCart(User existingUser) {
         Optional<ShoppingCart> existingCart = shoppingCartRepository.findByUser(existingUser);
         ShoppingCart cart;
@@ -154,15 +138,4 @@ public class ShopService {
         }
         return cart;
     }
-
-    private User getUser(User user) {
-        Optional<User> optionalUser = userRepository.findById(user.getId());
-        if (optionalUser.isEmpty()) throw new UsernameNotFoundException("Användaren hittas inte.");
-
-        User existingUser = optionalUser.get();
-        return existingUser;
-    }
-
-
-
 }

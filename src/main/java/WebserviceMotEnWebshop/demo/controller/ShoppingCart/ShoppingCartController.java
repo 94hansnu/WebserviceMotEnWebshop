@@ -1,6 +1,7 @@
 package WebserviceMotEnWebshop.demo.controller.ShoppingCart;
 
 import WebserviceMotEnWebshop.demo.database.entity.Article;
+import WebserviceMotEnWebshop.demo.database.entity.History;
 import WebserviceMotEnWebshop.demo.database.entity.ShoppingCartDetail;
 import WebserviceMotEnWebshop.demo.database.entity.User;
 import WebserviceMotEnWebshop.demo.database.service.ShopService;
@@ -45,6 +46,10 @@ public class ShoppingCartController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 
+    }
+    @PostMapping("/")
+    public ResponseEntity<List<History>> buy(Authentication authentication) {
+        return ResponseEntity.ok(shopService.buy(authentication.getName()));
     }
     @DeleteMapping("/") // Tar bort EN rad i shoppingCartDetails av viss produkt baserat på produktnamn
     public ResponseEntity deleteOneRowOfArticles(@RequestParam String articleName) {
