@@ -53,7 +53,7 @@ public class ShoppingCartController {
         Article article = new Article();
         article.setId(productId);
 
-        ShoppingCartDetail updatedItem = shopService.addItem(user, article, quantity);
+        ShoppingCartDetail updatedItem = shopService.add(username, article, quantity);
         if (updatedItem != null) {
             return ResponseEntity.ok(updatedItem);
         } else {
