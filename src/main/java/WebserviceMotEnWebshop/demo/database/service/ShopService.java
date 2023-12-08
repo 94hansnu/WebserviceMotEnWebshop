@@ -74,6 +74,23 @@ public class ShopService {
             return shoppingCartDetailRepository.save(newItem);
         }
     }
+    @Transactional // denna bör funka bättre, inte klar, behövs
+    public ShoppingCartDetail add(String username, String articleName, int quantity) {
+        User user = getUser(username);
+        Article article = articleRepository.findByName(articleName).orElseThrow();
+        ShoppingCart cart = getShoppingCart(user);
+        Optional<ShoppingCartDetail> existingItem = cart.getCartDetail().stream()
+                .filter(detail -> detail.getArticle().equals(article)).findFirst();
+
+        if (existingItem.isPresent()) {
+            ShoppingCartDetail item = existingItem.get();
+            item.setQuantity(item.getQuantity() + quantity);
+            return shoppingCartDetailRepository.save(item);
+        } else {
+            ShoppingCartDetail newItem = new ShoppingCartDetail(cart, article, quantity);
+            return shoppingCartDetailRepository.save(newItem);
+        }
+    }
 
     @Transactional
     public List<ShoppingCartDetail> getShoppingCartDetails(User user) { // <3>
