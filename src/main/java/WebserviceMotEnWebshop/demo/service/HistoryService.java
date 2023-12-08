@@ -64,11 +64,11 @@ public class HistoryService {
         Article fetchedArticle = existingArticle.get();
         return fetchedArticle;
     }*/
-   /*
+
     public List<History> getAllHistory() { // osäker om den ska vara kvar
         // Implementation för att hämta alla historiker
         return historyRepository.findAll();
-    }
+    }/*
 
     public Optional<History> getHistoryById(Long id) { // osäker om den ska vara kvar
         // Implementation för att hämta en historik med ett specifikt ID

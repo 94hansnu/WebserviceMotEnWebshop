@@ -53,7 +53,17 @@ public class HistoryController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-
+    //hämta all historik, endast tillgängligt för användaren
+    @GetMapping("")
+    public ResponseEntity<List<History>> getAllHistory(Authentication authentication) {
+        // Kontrollera om användaren är admin innan du tillåter att hämta all historik
+        if (isAdmin(authentication)) {
+            List<History> histories = historyService.getAllHistory();
+            return ResponseEntity.ok(histories);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 
     // hämta historik för en specifik användare
 
@@ -99,18 +109,9 @@ public class HistoryController {
         return authenticatedUserId.equals(String.valueOf(userId));
     }
 
-/*
+
 //osäker om den ska vara kvar
-    @GetMapping("")
-    public ResponseEntity<List<History>> getAllHistory(Authentication authentication) {
-        // Kontrollera om användaren är admin innan du tillåter att hämta all historik
-        if (isAdmin(authentication)) {
-            List<History> histories = historyService.getAllHistory();
-            return ResponseEntity.ok(histories);
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
+  /*
     //hämta specifik id, man kan bara hämta sin egen som kund, osäker om den ska vara kvar
     @GetMapping("/{id}")
     public ResponseEntity<History> getOneHistory(Authentication authentication, @PathVariable Long id) {
