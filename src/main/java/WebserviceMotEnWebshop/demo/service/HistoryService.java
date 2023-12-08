@@ -28,13 +28,32 @@ public class HistoryService {
         // Implementation för att lägga till historik
         return historyRepository.save(history);
     }
-    public User getHistoryByUser(User user){
+    public List<History> getHistoryByUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
+            throw new UsernameNotFoundException("Användaren hittades inte.");
+        }
+        User existingUser = optionalUser.get();
+        return historyRepository.findByUser(existingUser);
+    }
+
+    public List<History> getHistoryByArticle(Long articleId) {
+        Optional<Article> optionalArticle = articleRepository.findById(articleId);
+        if (optionalArticle.isEmpty()) {
+            throw new RuntimeException("Artikeln hittades inte.");
+        }
+        Article existingArticle = optionalArticle.get();
+        return historyRepository.findByArticle(existingArticle);
+    }
+
+  /*  public User getHistoryByUser(User user){
         Optional<User> optionalUser = userRepository.findById(user.getId());
         if (optionalUser.isEmpty()) throw new UsernameNotFoundException("Historik hittas inte.");
 
         User existingUser = optionalUser.get();
         return existingUser;
     }
+
 
     public Article getHistoryByArticle(Article article){
         Optional<Article> existingArticle = articleRepository.findById(article.getId());
@@ -44,7 +63,7 @@ public class HistoryService {
         }
         Article fetchedArticle = existingArticle.get();
         return fetchedArticle;
-    }
+    }*/
    /*
     public List<History> getAllHistory() { // osäker om den ska vara kvar
         // Implementation för att hämta alla historiker
