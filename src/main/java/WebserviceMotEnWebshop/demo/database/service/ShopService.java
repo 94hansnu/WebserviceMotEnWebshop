@@ -33,7 +33,7 @@ public class ShopService {
     *  (C) LÄGGA TILL ARTIKEL I KUNDKORG ----------------------------------- <2>
     *  (R) SE ALLA ARTIKEL, DESS ANTAL OCH PRIS I KUNDKORG ----------------- <3>
     *  (U) UPPDATERA ANTAL ARTIKEL I KUNDKORG ------------------------------ <2>
-    *  (D) TA BORT ARTIKEL I KUNDKORG -------------------------------------- <>
+    *  (D) TA BORT ARTIKEL I KUNDKORG -------------------------------------- <6,2>
 
 
     * TA BORT HELA KUNDKORG INNEHÅLL -------------------------------------------------- <4>
@@ -79,7 +79,7 @@ public class ShopService {
     }
 
     @Transactional
-    public List<ShoppingCartDetail> getShoppingCartDetails(String username) { // <3>
+    public List<ShoppingCartDetail> getShoppingCart(String username) { // <3>
         User existingUser = getUser(username);
         Optional<ShoppingCart> cart = shoppingCartRepository.findByUser(existingUser);
         if (cart.isPresent()) {
@@ -93,7 +93,7 @@ public class ShopService {
         shoppingCartDetailRepository.deleteAllByCart(cart);
     }
     @Transactional
-    public void removeArticleFromCart(String username, String articleName) {
+    public void removeArticleFromCart(String username, String articleName) { // <6>
         // lägg in kontroll som kollar om artikeln finns i användarens korg
         User existingUser = getUser(username);
         ShoppingCart cart = getShoppingCart(existingUser);

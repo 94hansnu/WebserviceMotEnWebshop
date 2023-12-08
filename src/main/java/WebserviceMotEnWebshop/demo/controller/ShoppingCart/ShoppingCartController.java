@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/Shoppingcart")
 public class ShoppingCartController {
@@ -19,7 +21,7 @@ public class ShoppingCartController {
     @Autowired
     private ShopService shopService;
 
-   /* //GET-förfrågan- Hämta kundkorgen för inloggad användare
+    //GET-förfrågan- Hämta kundkorgen för inloggad användare
     @GetMapping
     public ResponseEntity<List<ShoppingCartDetail>> getShoppingCart() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -28,7 +30,7 @@ public class ShoppingCartController {
         List<ShoppingCartDetail> shoppingCart = shopService.getShoppingCart(username);
         return ResponseEntity.ok(shoppingCart);
     }
-*/
+
 
     //POST-förfrågan- Lägg till produkt i kundkorgen
     @PostMapping
