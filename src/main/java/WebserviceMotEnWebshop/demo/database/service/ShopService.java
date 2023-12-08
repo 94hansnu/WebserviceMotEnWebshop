@@ -24,6 +24,18 @@ public class ShopService {
     private final HistoryRepository historyRepository;
 
 
+    /* Det skall finnas följande funktioner för shop:
+
+    * FÅ ALLA / SPECIFIK ARTIKEL
+    * LÄGGA TILL ARTIKEL I KUNDKORG
+    * UPPDATERA ANTAL ARTIKEL I KUNDKORG
+    * TA BORT ARTIKEL I KUNDKORG
+    * SE ALLA ARTIKEL, DESS ANTAL OCH PRIS I KUNDKORG
+
+    * TA BORT HELA KUNDKORG INNEHÅLL
+    * KÖP ALLT I HELA KUNDKORG (-> SPARA TILL HISTORY -> RADERA RADER I KUNDDETALJKORG)
+     */
+
 
 
     public List<Article> getArticles(String filter) {
@@ -35,7 +47,7 @@ public class ShopService {
 
 
 
-    // Borde fungera på att lägga till ny, radera och uppdatera. Mer testning krävs
+    // Borde fungera på att lägga till ny, radera och uppdatera kundkorg. Mer testning krävs
     // Om finns tid, gör egna Exeptions
     @Transactional
     public ShoppingCartDetail addItem(User user, Article article, int quantity) {
