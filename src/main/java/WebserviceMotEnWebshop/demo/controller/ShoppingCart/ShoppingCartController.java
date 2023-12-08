@@ -1,6 +1,8 @@
 package WebserviceMotEnWebshop.demo.controller.ShoppingCart;
 
+import WebserviceMotEnWebshop.demo.database.entity.Article;
 import WebserviceMotEnWebshop.demo.database.entity.ShoppingCartDetail;
+import WebserviceMotEnWebshop.demo.database.entity.User;
 import WebserviceMotEnWebshop.demo.database.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,11 +42,17 @@ public class ShoppingCartController {
 
     //PUT-förfrågan- Uppdatera antalet för produkt i kundkorgen
     @PutMapping("/{productId}")
-    public ResponseEntity<ShoppingCartDetail> updateCartItem(@PathVariable Long productId, @RequestParam  int quantity) {
+    public ResponseEntity<ShoppingCartDetail> updateCartItem(@PathVariable Long productId, @RequestParam int quantity) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        ShoppingCartDetail updatedItem = shopService.updateCartItem(username, productId, quantity);
+        User user = new User();
+        user.setId(username);
+
+        Article article = new Article();
+        article.setId(productId);
+
+        ShoppingCartDetail updatedItem = shopService.addItem(user, article, quantity);
         if (updatedItem != null) {
             return ResponseEntity.ok(updatedItem);
         } else {
