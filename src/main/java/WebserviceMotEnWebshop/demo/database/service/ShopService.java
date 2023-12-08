@@ -74,6 +74,7 @@ public class ShopService {
             return shoppingCartDetailRepository.save(newItem);
         }
     }
+
     @Transactional
     public List<ShoppingCartDetail> getShoppingCartDetails(User user) { // <3>
 
@@ -117,6 +118,11 @@ public class ShopService {
         }
         Article fetchedArticle = existingArticle.get();
         return fetchedArticle;
+    }
+    public User getUser(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) throw new UsernameNotFoundException("Användaren hittas inte");
+        return optionalUser.get();
     }
 
     private ShoppingCart getShoppingCart(User existingUser) {
