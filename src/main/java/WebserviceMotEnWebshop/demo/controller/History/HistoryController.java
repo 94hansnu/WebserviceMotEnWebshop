@@ -63,7 +63,7 @@ public class HistoryController {
 
     public boolean isUserAuthorized(Authentication authentication, History history) {
         // Implementation för att kontrollera om användaren har behörighet att hämta denna historik
-        return authentication.getName().equals(history.getUserId());
+        return authentication.getName().equals(history.getUser().getId());
     }
 
 }
