@@ -22,7 +22,7 @@ public class ShoppingCartController {
     private ShopService shopService;
 
     //GET-förfrågan- Hämta kundkorgen för inloggad användare
-    @GetMapping
+    @GetMapping("/cart")
     public ResponseEntity<List<ShoppingCartDetail>> getShoppingCart() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -34,11 +34,11 @@ public class ShoppingCartController {
 
     //POST-förfrågan- Lägg till produkt i kundkorgen
     @PostMapping
-    public ResponseEntity<ShoppingCartDetail> addToCart(@RequestBody CartItem cart) {
+    public ResponseEntity<ShoppingCartDetail> addToCart(@RequestBody CartItem item) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
-            ShoppingCartDetail addedItem = shopService.addOrUpdateArticleInCart(username, cart.name(), cart.quantity());
+            ShoppingCartDetail addedItem = shopService.addOrUpdateArticleInCart(username, item.name(), item.quantity());
             return ResponseEntity.ok(addedItem);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -46,28 +46,25 @@ public class ShoppingCartController {
         }
 
     }
-    @DeleteMapping // Tar bort EN rad i shoppingCartDetails av viss produkt baserat på produktnamn
+    @DeleteMapping("/") // Tar bort EN rad i shoppingCartDetails av viss produkt baserat på produktnamn
     public ResponseEntity deleteOneRowOfArticles(@RequestParam String articleName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         shopService.removeArticleFromCart(username, articleName);
         return ResponseEntity.ok().build();
     }
-
+    @DeleteMapping
+    public ResponseEntity deleteWholeCart(Authentication authentication) {
+        shopService.removeAllCartItems(authentication.getName());
+        return ResponseEntity.ok().build();
+    }
 
     //PUT-förfrågan- Uppdatera antalet för produkt i kundkorgen
-    @PutMapping("/{productId}")
-    public ResponseEntity<ShoppingCartDetail> updateCartItem(@PathVariable Long productId, @RequestParam int quantity) {
+    @PutMapping
+    public ResponseEntity<ShoppingCartDetail> updateCartItem(@RequestBody CartItem item) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
-        User user = new User();
-        user.setId(username);
-
-        Article article = new Article();
-        article.setId(productId);
-
-        ShoppingCartDetail updatedItem = shopService.add(username, article, quantity);
+        ShoppingCartDetail updatedItem = shopService.addOrUpdateArticleInCart(username, item.name(), item.quantity());
         if (updatedItem != null) {
             return ResponseEntity.ok(updatedItem);
         } else {
