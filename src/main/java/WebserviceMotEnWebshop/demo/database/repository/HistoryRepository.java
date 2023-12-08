@@ -11,6 +11,4 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
 
     List<History> findByUser(User user);
     List<History> findByArticle(Article article);
-
-
 }

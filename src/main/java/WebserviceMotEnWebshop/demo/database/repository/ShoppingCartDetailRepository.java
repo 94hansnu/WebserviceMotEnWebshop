@@ -15,6 +15,7 @@ import java.util.List;
 public interface ShoppingCartDetailRepository extends JpaRepository<ShoppingCartDetail, Long> {
 
     List<ShoppingCartDetail> findByCart(ShoppingCart cart);
+    void deleteAllByCart(ShoppingCart cart);
 
     // Radera alla rader i tbl som tillhör en kundkorg (använd vid köp)
     @Transactional

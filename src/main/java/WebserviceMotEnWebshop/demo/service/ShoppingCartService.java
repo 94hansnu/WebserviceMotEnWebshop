@@ -1,4 +1,4 @@
-package WebserviceMotEnWebshop.demo.service;
+/*package WebserviceMotEnWebshop.demo.service;
 
 import WebserviceMotEnWebshop.demo.entity.dao.ShoppingCartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,4 +41,4 @@ public class ShoppingCartService {
             return false;
         }
     }
-}
+}*/
