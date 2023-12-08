@@ -1,6 +1,8 @@
 package WebserviceMotEnWebshop.demo.controller.History;
 
+import WebserviceMotEnWebshop.demo.database.entity.Article;
 import WebserviceMotEnWebshop.demo.database.entity.History;
+import WebserviceMotEnWebshop.demo.database.entity.User;
 import WebserviceMotEnWebshop.demo.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,33 +25,34 @@ public class HistoryController {
     @PostMapping("")
     public ResponseEntity <History> addHistory(Authentication authentication, @RequestBody History history){
         if (isAdmin(authentication)) {
-            History newHistory = historyService.addHistory(history, authentication.getName());
+            History newHistory = historyService.addHistory(history);
             return ResponseEntity.ok(newHistory);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
-    //hämtar all historik (endast för admin)
-    @GetMapping("")
-    public ResponseEntity<List<History>> getAllHistory(Authentication authentication) {
-        // Kontrollera om användaren är admin innan du tillåter att hämta all historik
-        if (isAdmin(authentication)) {
-            List<History> histories = historyService.getAll();
+    // hämta historik för en specifik användare
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<History>> getHistoryByUser(@PathVariable Long userId, Authentication authentication) {
+        if (isAdmin(authentication) || isUserAuthorized(authentication, userId)) {
+            User user = new User(); // Skapa ett User-objekt med det specifika användar-ID:et
+            user.setId(userId);
+            List<History> histories = historyService.getHistoryByUser(user);
             return ResponseEntity.ok(histories);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
-    //hämta specifik id, man kan bara hämta sin egen som kund
-    @GetMapping("/{id}")
-    public ResponseEntity<History> getOneHistory(Authentication authentication, @PathVariable Long id) {
-        Optional<History> history = historyService.getOneById(id);
-
-        // Kontrollera om användaren har behörighet att hämta denna historik
-        if (history.isPresent() && (isAdmin(authentication) || isUserAuthorized(authentication, history.get()))) {
-            return ResponseEntity.ok(history.get());
+    // hämta historik för en specifik artikel
+    @GetMapping("/article/{articleId}")
+    public ResponseEntity<List<History>> getHistoryByArticle(@PathVariable Long articleId, Authentication authentication) {
+        if (isAdmin(authentication)) {
+            Article article = new Article(); // Skapa ett Article-objekt med det specifika artikel-ID:et
+            article.setId(articleId);
+            List<History> histories = historyService.getHistoryByArticle(article);
+            return ResponseEntity.ok(histories);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -61,9 +64,39 @@ public class HistoryController {
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
     }
 
-    public boolean isUserAuthorized(Authentication authentication, History history) {
-        // Implementation för att kontrollera om användaren har behörighet att hämta denna historik
-        return authentication.getName().equals(history.getUser().getId());
+    public boolean isUserAuthorized(Authentication authentication, Long userId) {
+        // Kontrollera om användaren är admin, i så fall har den alltid behörighet
+        if (isAdmin(authentication)) {
+            return true;
+        }
+
+        // Jämför användar-ID från autentiseringen med det som tillhandahålls som (userId)
+        String authenticatedUserId = authentication.getName(); // Antag att användar-ID:et är lagrat i användarens namn
+        return authenticatedUserId.equals(String.valueOf(userId));
     }
 
+/*
+//osäker om den ska vara kvar
+    @GetMapping("")
+    public ResponseEntity<List<History>> getAllHistory(Authentication authentication) {
+        // Kontrollera om användaren är admin innan du tillåter att hämta all historik
+        if (isAdmin(authentication)) {
+            List<History> histories = historyService.getAllHistory();
+            return ResponseEntity.ok(histories);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+    //hämta specifik id, man kan bara hämta sin egen som kund, osäker om den ska vara kvar
+    @GetMapping("/{id}")
+    public ResponseEntity<History> getOneHistory(Authentication authentication, @PathVariable Long id) {
+        Optional<History> history = historyService.getHistoryById(id);
+
+        // Kontrollera om användaren har behörighet att hämta denna historik
+        if (history.isPresent() && (isAdmin(authentication) || isUserAuthorized(authentication, history.get()))) {
+            return ResponseEntity.ok(history.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }*/
 }
