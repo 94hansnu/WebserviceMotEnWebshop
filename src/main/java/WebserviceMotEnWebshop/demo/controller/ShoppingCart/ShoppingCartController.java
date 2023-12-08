@@ -1,6 +1,7 @@
 package WebserviceMotEnWebshop.demo.controller.ShoppingCart;
 
-import WebserviceMotEnWebshop.demo.service.ShoppingCartService;
+import WebserviceMotEnWebshop.demo.database.entity.ShoppingCartDetail;
+import WebserviceMotEnWebshop.demo.database.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,34 +15,36 @@ import java.util.List;
 public class ShoppingCartController {
 
     @Autowired
-    private ShoppingCartService shoppingCartService;
+    private ShopService shopService;
 
     //GET-förfrågan- Hämta kundkorgen för inloggad användare
     @GetMapping
-    public ResponseEntity<List<Article>> getShoppingCart() {
+    public ResponseEntity<List<ShoppingCartDetail>> getShoppingCart() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        List<Article> shoppingCart = shoppingCartService.getShoppingCart(username);
+        List<ShoppingCartDetail> shoppingCart = shopService.getShoppingCart(username);
         return ResponseEntity.ok(shoppingCart);
     }
 
+
     //POST-förfrågan- Lägg till produkt i kundkorgen
     @PostMapping
-    public ResponseEntity<Article> addToCart(@RequestBody Article article) {
+    public ResponseEntity<ShoppingCartDetail> addToCart(@RequestBody ShoppingCartDetail shoppingCartDetail) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        Article addedItem = shoppingCartService.addToCart(username, article);
+        ShoppingCartDetail addedItem = shopService.addItem(username, shoppingCartDetail.getArticle(), shoppingCartDetail.getQuantity());
+        return ResponseEntity.ok(addedItem);
     }
 
     //PUT-förfrågan- Uppdatera antalet för produkt i kundkorgen
     @PutMapping("/{productId}")
-    public ResponseEntity<Article> updateCartItem(@PathVariable Long productId, @RequestParam  int quantity) {
+    public ResponseEntity<ShoppingCartDetail> updateCartItem(@PathVariable Long productId, @RequestParam  int quantity) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        Article updatedItem = shoppingCartService.updateCartItem(username, productId, quantity);
+        ShoppingCartDetail updatedItem = shopService.updateCartItem(username, productId, quantity);
         if (updatedItem != null) {
             return ResponseEntity.ok(updatedItem);
         } else {
@@ -55,12 +58,11 @@ public class ShoppingCartController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-        boolean  removed = shoppingCartService.removeFromCart(username, productId);
+        boolean removed = shopService.removeFromCart(username, productId);
         if (removed) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-
 }
