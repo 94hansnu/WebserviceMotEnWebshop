@@ -12,8 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/Shoppingcart")
 public class ShoppingCartController {
@@ -38,8 +36,7 @@ public class ShoppingCartController {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
-
-            ShoppingCartDetail addedItem = shopService.add(username, cart.name(), cart.quantity());
+            ShoppingCartDetail addedItem = shopService.addOrUpdateArticleInCart(username, cart.name(), cart.quantity());
             return ResponseEntity.ok(addedItem);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -47,15 +44,15 @@ public class ShoppingCartController {
         }
 
     }
-    @DeleteMapping
-    public ResponseEntity delete(@RequestParam String name) {
+    @DeleteMapping // Tar bort EN rad i shoppingCartDetails av viss produkt baserat på produktnamn
+    public ResponseEntity deleteOneRowOfArticles(@RequestParam String articleName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        shopService.removeArticleFromCart(username, name);
+        shopService.removeArticleFromCart(username, articleName);
         return ResponseEntity.ok().build();
     }
 
-/*
+
     //PUT-förfrågan- Uppdatera antalet för produkt i kundkorgen
     @PutMapping("/{productId}")
     public ResponseEntity<ShoppingCartDetail> updateCartItem(@PathVariable Long productId, @RequestParam int quantity) {
@@ -88,5 +85,5 @@ public class ShoppingCartController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }*/
+    }
 }

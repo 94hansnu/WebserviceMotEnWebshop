@@ -22,7 +22,7 @@ public class ArticleController {
         List<Article> articles = articleService.getAllArticles();
         return ResponseEntity.ok(articles);
     }
-/*
+
     //GET-förfrågan- Hämta en specifik artikel (för alla användare)
     @GetMapping("/{articleId}")
     public ResponseEntity<Article> getArticles(@PathVariable Long articleId) {
@@ -32,7 +32,7 @@ public class ArticleController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }*/
+    }
 
     //POST-förfrågan- Skapa en ny artikel (ADMIN)
     @PutMapping
@@ -40,7 +40,7 @@ public class ArticleController {
     public ResponseEntity<Article> createArticle(@RequestBody Article article) {
         Article createdArticle  = articleService.createArticle(article);
         return ResponseEntity.ok(createdArticle);
-    }/*
+    }
 
     //PUT-förfrågan- Uppdatera en artikel (ADMIN)
     @PutMapping("/{articleId")
@@ -64,5 +64,5 @@ public class ArticleController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }*/
+    }
 }

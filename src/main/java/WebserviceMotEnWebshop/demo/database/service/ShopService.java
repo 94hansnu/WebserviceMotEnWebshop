@@ -5,7 +5,6 @@ import WebserviceMotEnWebshop.demo.database.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +33,7 @@ public class ShopService {
     *  (C) LÄGGA TILL ARTIKEL I KUNDKORG ----------------------------------- <2>
     *  (R) SE ALLA ARTIKEL, DESS ANTAL OCH PRIS I KUNDKORG ----------------- <3>
     *  (U) UPPDATERA ANTAL ARTIKEL I KUNDKORG ------------------------------ <2>
-    *  (D) TA BORT ARTIKEL I KUNDKORG -------------------------------------- <2>
+    *  (D) TA BORT ARTIKEL I KUNDKORG -------------------------------------- <>
 
 
     * TA BORT HELA KUNDKORG INNEHÅLL -------------------------------------------------- <4>
@@ -52,67 +51,37 @@ public class ShopService {
     }
     // Borde fungera på att lägga till ny, radera och uppdatera kundkorg. Mer testning krävs
     // Om finns tid, gör egna Exeptions
-    @Transactional
-    public ShoppingCartDetail addItem(User user, Article article, int quantity) { // <2>
 
-        User existingUser = getUser(user);
-
-        ShoppingCart cart = getShoppingCart(existingUser);
-
-        Article fetchedArticle = getArticle(article);
-
-        // Kollar om det finns ett matchande objekt artikel i befintlig kundkorg
-        Optional<ShoppingCartDetail> existingItem = cart.getCartDetail().stream()
-                .filter(cartDetail -> cartDetail.getArticle().equals(fetchedArticle)).findFirst();
-
-        if (existingItem.isPresent()) {
-            ShoppingCartDetail item = existingItem.get();
-            // Kontroll om användare försöker att ta bort alla av den artikel
-            if (quantity + item.getQuantity() <= 0) {
-                shoppingCartDetailRepository.delete(item);
-
-                throw new RuntimeException("Artikel raderad."); // Borde ändras till ett eget fel.
-            }
-            item.setQuantity(item.getQuantity() + quantity);
-            return shoppingCartDetailRepository.save(item);
-        } else {
-            ShoppingCartDetail newItem = new ShoppingCartDetail(cart, article, quantity);
-            return shoppingCartDetailRepository.save(newItem);
-        }
-    }
-
-
-    @Transactional // denna bör funka bättre, inte klar, behövs
-    public ShoppingCartDetail add(String username, String articleName, int quantity) {
+    @Transactional // <2> // klar fungerar för uppdatera antal (+ & -), lägga till nytt
+    public ShoppingCartDetail addOrUpdateArticleInCart(String username, String articleName, int quantity) {
         User user = getUser(username);
-        Article article = articleRepository.findByName(articleName).orElseThrow();
+        Article article = getArticle(articleName);
         ShoppingCart cart = getShoppingCart(user);
+
         Optional<ShoppingCartDetail> existingItem = cart.getCartDetail().stream()
                 .filter(detail -> detail.getArticle().equals(article)).findFirst();
 
-        if (existingItem.isPresent()) {
+        if (existingItem.isPresent() &&
+                (quantity + existingItem.get().getQuantity() >= 1)) {
+
             ShoppingCartDetail item = existingItem.get();
-            if (quantity + item.getQuantity() <= 0) {
-                //deleteArticleInCart(item);
-                ShoppingCart cartt = item.getCart();
-                cartt.getCartDetail().remove(item);
-                shoppingCartDetailRepository.delete(item);
-                throw new RuntimeException("Artikel raderad.");
-            }
             item.setQuantity(item.getQuantity() + quantity);
             return shoppingCartDetailRepository.save(item);
-        } else {
+
+        }
+        else if (!existingItem.isPresent() && quantity >= 1) {
+
             ShoppingCartDetail newItem = new ShoppingCartDetail(cart, article, quantity);
             return shoppingCartDetailRepository.save(newItem);
         }
+        else throw new RuntimeException("Du försöker att ta bort fler än vad du har,\neller så försöker du ta bort allt. " +
+                "Använd metoden removeArticleFromCart.");
     }
 
     @Transactional
-    public List<ShoppingCartDetail> getShoppingCartDetails(User user) { // <3>
-
-        User existingUser = getUser(user);
-
-        Optional<ShoppingCart> cart = shoppingCartRepository.findByUser(user);
+    public List<ShoppingCartDetail> getShoppingCartDetails(String username) { // <3>
+        User existingUser = getUser(username);
+        Optional<ShoppingCart> cart = shoppingCartRepository.findByUser(existingUser);
         if (cart.isPresent()) {
             return cart.get().getCartDetail();
         } else return Collections.emptyList();

@@ -33,7 +33,7 @@ public class HistoryController {
         }
     }
     // Hämta historik för en specifik användare
-    /*@GetMapping("/user/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<History>> getHistoryByUser(@PathVariable Long userId, Authentication authentication) {
         if (isAdmin(authentication) || isUserAuthorized(authentication, userId)) {
             List<History> histories = historyService.getHistoryByUser(userId);
@@ -67,7 +67,7 @@ public class HistoryController {
 
     // hämta historik för en specifik användare
 
-  /*  @GetMapping("/user/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<History>> getHistoryByUser(@PathVariable Long userId, Authentication authentication) {
         if (isAdmin(authentication) || isUserAuthorized(authentication, userId)) {
             User user = new User(); // Skapa ett User-objekt med det specifika användar-ID:et
@@ -90,7 +90,7 @@ public class HistoryController {
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-    }*/
+    }
 
     public boolean isAdmin(Authentication authentication) {
         // Implementation för att kontrollera om användaren är admin
