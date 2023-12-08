@@ -1,15 +1,13 @@
 package WebserviceMotEnWebshop.demo.database.service;
 
-import WebserviceMotEnWebshop.demo.database.entity.Article;
-import WebserviceMotEnWebshop.demo.database.entity.ShoppingCart;
-import WebserviceMotEnWebshop.demo.database.entity.ShoppingCartDetail;
-import WebserviceMotEnWebshop.demo.database.entity.User;
+import WebserviceMotEnWebshop.demo.database.entity.*;
 import WebserviceMotEnWebshop.demo.database.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,54 +24,37 @@ public class ShopService {
 
     /* Det skall finnas följande funktioner för shop:
 
-    *   FÅ ALLA / SPECIFIK ARTIKEL -> STARTSIDAN, VAD SOM FINNS TILLGÄNGLIGT
+    *   FÅ ALLA / SPECIFIK ARTIKEL -> STARTSIDAN, VAD SOM FINNS TILLGÄNGLIGT <1>
 
-    *  (C) LÄGGA TILL ARTIKEL I KUNDKORG
-    *  (R) SE ALLA ARTIKEL, DESS ANTAL OCH PRIS I KUNDKORG
-    *  (U) UPPDATERA ANTAL ARTIKEL I KUNDKORG
-    *  (D) TA BORT ARTIKEL I KUNDKORG
+    *  (C) LÄGGA TILL ARTIKEL I KUNDKORG ----------------------------------- <2>
+    *  (R) SE ALLA ARTIKEL, DESS ANTAL OCH PRIS I KUNDKORG ----------------- <3>
+    *  (U) UPPDATERA ANTAL ARTIKEL I KUNDKORG ------------------------------ <2>
+    *  (D) TA BORT ARTIKEL I KUNDKORG -------------------------------------- <2>
 
 
-    * TA BORT HELA KUNDKORG INNEHÅLL
-    * KÖP ALLT I HELA KUNDKORG (-> SPARA TILL HISTORY -> RADERA RADER I KUNDDETALJKORG)
+    * TA BORT HELA KUNDKORG INNEHÅLL -------------------------------------------------- <4>
+    * KÖP ALLT I HELA KUNDKORG (SPARA TILL HISTORY -> RADERA RADER I KUNDDETALJKORG) -- <5>
      */
 
 
 
-    public List<Article> getArticles(String filter) {
+
+    public List<Article> getArticles(String filter) { // <1>
         if (filter == null || filter.isEmpty()) {
             return articleRepository.findAll();
         }
         else return articleRepository.search(filter);
     }
-
-
-
     // Borde fungera på att lägga till ny, radera och uppdatera kundkorg. Mer testning krävs
     // Om finns tid, gör egna Exeptions
     @Transactional
-    public ShoppingCartDetail addItem(User user, Article article, int quantity) {
+    public ShoppingCartDetail addItem(User user, Article article, int quantity) { // <2>
 
-        Optional<User> optionalUser = userRepository.findById(user.getId());
-        if (optionalUser.isEmpty()) throw new UsernameNotFoundException("Användaren hittas inte.");
+        User existingUser = getUser(user);
 
-        User existingUser = optionalUser.get();
+        ShoppingCart cart = getShoppingCart(existingUser);
 
-        Optional<ShoppingCart> existingCart = shoppingCartRepository.findByUser(existingUser);
-        ShoppingCart cart;
-        if (existingCart.isPresent()) {
-            cart = existingCart.get();
-        } else {
-            ShoppingCart newCart = new ShoppingCart();
-            newCart.setUser(existingUser);
-            cart = shoppingCartRepository.save(newCart);
-        }
-
-        Optional<Article> existingArticle = articleRepository.findById(article.getId());
-        if (existingArticle.isEmpty()) {
-            throw new RuntimeException("Artikel finns inte.");
-        }
-        Article fetchedArticle = existingArticle.get();
+        Article fetchedArticle = getArticle(article);
 
         // Kollar om det finns ett matchande objekt artikel i befintlig kundkorg
         Optional<ShoppingCartDetail> existingItem = cart.getCartDetail().stream()
@@ -84,6 +65,7 @@ public class ShopService {
             // Kontroll om användare försöker att ta bort alla av den artikel
             if (quantity + item.getQuantity() <= 0) {
                 shoppingCartDetailRepository.delete(item);
+                throw new RuntimeException("Artikel raderad."); // Borde ändras till ett eget fel.
             }
             item.setQuantity(item.getQuantity() + quantity);
             return shoppingCartDetailRepository.save(item);
@@ -92,5 +74,72 @@ public class ShopService {
             return shoppingCartDetailRepository.save(newItem);
         }
     }
+    @Transactional
+    public List<ShoppingCartDetail> getShoppingCartDetails(User user) { // <3>
+
+        User existingUser = getUser(user);
+
+        Optional<ShoppingCart> cart = shoppingCartRepository.findByUser(user);
+        if (cart.isPresent()) {
+            return cart.get().getCartDetail();
+        } else return Collections.emptyList();
+    }
+    @Transactional
+    public void removeAllCartItems(User user) { // <4>
+        User existingUser = getUser(user);
+        ShoppingCart cart = getShoppingCart(existingUser);
+        shoppingCartDetailRepository.deleteAllByCart(cart);
+    }
+    @Transactional
+    public void buy(User user) { // <5>
+        User existingUser = getUser(user);
+        ShoppingCart cart = getShoppingCart(existingUser);
+
+        for (ShoppingCartDetail detail : cart.getCartDetail()) {
+            History history = new History();
+            history.setUser(existingUser);
+            Article article = getArticle(detail.getArticle());
+            history.setArticle(article);
+            history.setPrice(article.getPrice());
+            history.setQuantity(detail.getQuantity());
+            historyRepository.save(history);
+        }
+
+        shoppingCartDetailRepository.deleteAllByCart(cart);
+        cart.getCartDetail().clear();
+        shoppingCartRepository.save(cart);
+
+    }
+    private Article getArticle(Article article) {
+        Optional<Article> existingArticle = articleRepository.findById(article.getId());
+        if (existingArticle.isEmpty()) {
+            throw new RuntimeException("Artikel finns inte.");
+        }
+        Article fetchedArticle = existingArticle.get();
+        return fetchedArticle;
+    }
+
+    private ShoppingCart getShoppingCart(User existingUser) {
+        Optional<ShoppingCart> existingCart = shoppingCartRepository.findByUser(existingUser);
+        ShoppingCart cart;
+        if (existingCart.isPresent()) {
+            cart = existingCart.get();
+        } else {
+            ShoppingCart newCart = new ShoppingCart();
+            newCart.setUser(existingUser);
+            cart = shoppingCartRepository.save(newCart);
+        }
+        return cart;
+    }
+
+    private User getUser(User user) {
+        Optional<User> optionalUser = userRepository.findById(user.getId());
+        if (optionalUser.isEmpty()) throw new UsernameNotFoundException("Användaren hittas inte.");
+
+        User existingUser = optionalUser.get();
+        return existingUser;
+    }
+
+
 
 }
