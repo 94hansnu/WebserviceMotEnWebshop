@@ -8,7 +8,9 @@ import WebserviceMotEnWebshop.demo.database.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,8 +25,19 @@ public class ShopService {
 
 
 
+
+    public List<Article> getArticles(String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return articleRepository.findAll();
+        }
+        else return articleRepository.search(filter);
+    }
+
+
+
     // Borde fungera på att lägga till ny, radera och uppdatera. Mer testning krävs
     // Om finns tid, gör egna Exeptions
+    @Transactional
     public ShoppingCartDetail addItem(User user, Article article, int quantity) {
 
         Optional<User> optionalUser = userRepository.findById(user.getId());
@@ -64,8 +77,6 @@ public class ShopService {
             ShoppingCartDetail newItem = new ShoppingCartDetail(cart, article, quantity);
             return shoppingCartDetailRepository.save(newItem);
         }
-
-
     }
 
 }
