@@ -1,6 +1,7 @@
 package WebserviceMotEnWebshop.demo.controller.User;
 
 
+import WebserviceMotEnWebshop.demo.database.entity.User;
 import WebserviceMotEnWebshop.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/users")
 @CrossOrigin("*")
@@ -20,13 +23,13 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/")
-    public ResponseEntity<Customer> getUserInfo(Authentication authentication) {
+    public ResponseEntity <Optional<User>> getUserInfo(Authentication authentication) {
         String username = authentication.getName();
 
-        Customer customer = userService.getUserByUsername(username);
+        Optional <User> user = userService.getUserByUsername(username);
 
-        if (customer != null) {
-            return ResponseEntity.ok(customer);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

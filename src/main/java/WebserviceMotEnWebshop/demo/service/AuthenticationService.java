@@ -1,5 +1,9 @@
 package WebserviceMotEnWebshop.demo.service;
 
+import WebserviceMotEnWebshop.demo.database.entity.Role;
+import WebserviceMotEnWebshop.demo.database.entity.User;
+import WebserviceMotEnWebshop.demo.database.repository.RoleRepository;
+import WebserviceMotEnWebshop.demo.database.repository.UserRepository;
 import WebserviceMotEnWebshop.demo.modell.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +32,7 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
-    public Customer registerUser(String username, String password){
+    public User registerUser(String username, String password){
 
         String encodedPassword = passwordEncoder.encode(password);
 
@@ -37,7 +41,7 @@ public class AuthenticationService {
         Set<Role> authorities = new HashSet<>();
         authorities.add(userRole);
 
-        return userRepository.save(new Customer(0, username, encodedPassword, authorities));
+        return userRepository.save(new User(username, encodedPassword, authorities));
     }
 
     public LoginResponse loginUser(String username, String password){

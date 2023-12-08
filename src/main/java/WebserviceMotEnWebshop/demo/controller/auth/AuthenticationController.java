@@ -1,5 +1,6 @@
 package WebserviceMotEnWebshop.demo.controller.auth;
 
+import WebserviceMotEnWebshop.demo.database.entity.User;
 import WebserviceMotEnWebshop.demo.service.AuthenticationService;
 import WebserviceMotEnWebshop.demo.modell.LoginResponse;
 import WebserviceMotEnWebshop.demo.modell.Registration;
@@ -15,7 +16,7 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public Customer registerUser(@RequestBody Registration body){
+    public User registerUser(@RequestBody Registration body){
         return authenticationService.registerUser(body.getUsername(), body.getPassword());
     }
     @PostMapping("/login")

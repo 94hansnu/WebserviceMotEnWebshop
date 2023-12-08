@@ -1,5 +1,6 @@
 package WebserviceMotEnWebshop.demo.controller.History;
 
+import WebserviceMotEnWebshop.demo.database.entity.History;
 import WebserviceMotEnWebshop.demo.service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,7 +63,7 @@ public class HistoryController {
 
     public boolean isUserAuthorized(Authentication authentication, History history) {
         // Implementation för att kontrollera om användaren har behörighet att hämta denna historik
-        return authentication.getName().equals(history.getCustomerId());
+        return authentication.getName().equals(history.getUserId());
     }
 
 }

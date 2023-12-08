@@ -1,7 +1,9 @@
 package WebserviceMotEnWebshop.demo.modell;
 
+import WebserviceMotEnWebshop.demo.database.entity.User;
+
 public class LoginResponse {
-    private Customer user;
+    private User user;
 
     private String jwt;
 
@@ -9,15 +11,15 @@ public class LoginResponse {
         super();
     }
 
-    public LoginResponse(Customer user, String jwt){
+    public LoginResponse(User user, String jwt){
         this.user = user;
         this.jwt = jwt;
     }
-    public Customer getUser(){
+    public User getUser(){
         return this.user;
     }
 
-    public void setUser(Customer user){
+    public void setUser(User user){
         this.user = user;
     }
 
