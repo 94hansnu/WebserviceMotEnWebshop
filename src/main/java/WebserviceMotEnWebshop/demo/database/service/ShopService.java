@@ -2,7 +2,10 @@ package WebserviceMotEnWebshop.demo.database.service;
 
 import WebserviceMotEnWebshop.demo.database.entity.*;
 import WebserviceMotEnWebshop.demo.database.repository.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,8 @@ public class ShopService {
     private final ShoppingCartDetailRepository shoppingCartDetailRepository;
     private final UserRepository userRepository;
     private final HistoryRepository historyRepository;
+    @PersistenceContext
+    EntityManager entityManager;
 
 
     /* Det skall finnas följande funktioner för shop:
@@ -65,6 +70,7 @@ public class ShopService {
             // Kontroll om användare försöker att ta bort alla av den artikel
             if (quantity + item.getQuantity() <= 0) {
                 shoppingCartDetailRepository.delete(item);
+
                 throw new RuntimeException("Artikel raderad."); // Borde ändras till ett eget fel.
             }
             item.setQuantity(item.getQuantity() + quantity);
@@ -74,6 +80,8 @@ public class ShopService {
             return shoppingCartDetailRepository.save(newItem);
         }
     }
+
+
     @Transactional // denna bör funka bättre, inte klar, behövs
     public ShoppingCartDetail add(String username, String articleName, int quantity) {
         User user = getUser(username);
@@ -84,6 +92,13 @@ public class ShopService {
 
         if (existingItem.isPresent()) {
             ShoppingCartDetail item = existingItem.get();
+            if (quantity + item.getQuantity() <= 0) {
+                //deleteArticleInCart(item);
+                ShoppingCart cartt = item.getCart();
+                cartt.getCartDetail().remove(item);
+                shoppingCartDetailRepository.delete(item);
+                throw new RuntimeException("Artikel raderad.");
+            }
             item.setQuantity(item.getQuantity() + quantity);
             return shoppingCartDetailRepository.save(item);
         } else {
@@ -103,10 +118,18 @@ public class ShopService {
         } else return Collections.emptyList();
     }
     @Transactional
-    public void removeAllCartItems(User user) { // <4>
-        User existingUser = getUser(user);
+    public void removeAllCartItems(String username) { // <4>
+        User existingUser = getUser(username);
         ShoppingCart cart = getShoppingCart(existingUser);
         shoppingCartDetailRepository.deleteAllByCart(cart);
+    }
+    @Transactional
+    public void removeArticleFromCart(String username, String articleName) {
+        // lägg in kontroll som kollar om artikeln finns i användarens korg
+        User existingUser = getUser(username);
+        ShoppingCart cart = getShoppingCart(existingUser);
+        Article article = getArticle(articleName);
+        shoppingCartDetailRepository.deleteByArticle(article);
     }
     @Transactional
     public void buy(User user) { // <5>
@@ -132,6 +155,14 @@ public class ShopService {
         Optional<Article> existingArticle = articleRepository.findById(article.getId());
         if (existingArticle.isEmpty()) {
             throw new RuntimeException("Artikel finns inte.");
+        }
+        Article fetchedArticle = existingArticle.get();
+        return fetchedArticle;
+    }
+    private Article getArticle(String name) {
+        Optional<Article> existingArticle = articleRepository.findByName(name);
+        if (existingArticle.isEmpty()) {
+            throw new RuntimeException("Artikel finns inte." + name);
         }
         Article fetchedArticle = existingArticle.get();
         return fetchedArticle;

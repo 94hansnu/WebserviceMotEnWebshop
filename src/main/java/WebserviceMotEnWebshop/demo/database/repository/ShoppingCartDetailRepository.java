@@ -16,18 +16,14 @@ public interface ShoppingCartDetailRepository extends JpaRepository<ShoppingCart
 
     List<ShoppingCartDetail> findByCart(ShoppingCart cart);
     void deleteAllByCart(ShoppingCart cart);
-
+    void deleteByArticle(Article article);
     // Radera alla rader i tbl som tillhör en kundkorg (använd vid köp)
     @Transactional
     @Modifying
-    @Query("DELETE FROM ShoppingCartDetail sd WHERE sh.cart = :shoppingChart")
+    @Query("DELETE FROM ShoppingCartDetail sd WHERE sd.cart = :shoppingCart")
     void deleteByShoppingCart(@Param("shoppingCart") ShoppingCart shoppingCart);
 
     // Uppdaterar antalet artiklar
     // Det behövs 3 parametrar: ShoppingChart, Artikel och nytt antal
-    @Modifying
-    @Query("UPDATE ShoppingCartDetail sd SET sd.quantity = :newQuantity WHERE sd.cart = :shoppingCart AND sd.article = :article")
-    void updateQuantity(@Param("shoppingCart") ShoppingCart shoppingCart,
-                        @Param("article") Article article,
-                        @Param("newQuantity") int newQuantity);
+
 }

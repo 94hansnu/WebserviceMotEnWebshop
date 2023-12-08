@@ -1,5 +1,7 @@
 package WebserviceMotEnWebshop.demo.database.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties("cart")
 public class ShoppingCartDetail extends BaseEntity {
     @ManyToOne
     private ShoppingCart cart;

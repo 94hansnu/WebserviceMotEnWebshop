@@ -6,6 +6,7 @@ import WebserviceMotEnWebshop.demo.database.entity.User;
 import WebserviceMotEnWebshop.demo.database.service.ShopService;
 import WebserviceMotEnWebshop.demo.modell.dto.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +21,7 @@ public class ShoppingCartController {
     @Autowired
     private ShopService shopService;
 
-    //GET-förfrågan- Hämta kundkorgen för inloggad användare
+   /* //GET-förfrågan- Hämta kundkorgen för inloggad användare
     @GetMapping
     public ResponseEntity<List<ShoppingCartDetail>> getShoppingCart() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -29,18 +30,32 @@ public class ShoppingCartController {
         List<ShoppingCartDetail> shoppingCart = shopService.getShoppingCart(username);
         return ResponseEntity.ok(shoppingCart);
     }
-
+*/
 
     //POST-förfrågan- Lägg till produkt i kundkorgen
     @PostMapping
     public ResponseEntity<ShoppingCartDetail> addToCart(@RequestBody CartItem cart) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+
+            ShoppingCartDetail addedItem = shopService.add(username, cart.name(), cart.quantity());
+            return ResponseEntity.ok(addedItem);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+    }
+    @DeleteMapping
+    public ResponseEntity delete(@RequestParam String name) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
-        ShoppingCartDetail addedItem = shopService.add(username, cart.name(), cart.quantity());
-        return ResponseEntity.ok(addedItem);
+        shopService.removeArticleFromCart(username, name);
+        return ResponseEntity.ok().build();
     }
 
+/*
     //PUT-förfrågan- Uppdatera antalet för produkt i kundkorgen
     @PutMapping("/{productId}")
     public ResponseEntity<ShoppingCartDetail> updateCartItem(@PathVariable Long productId, @RequestParam int quantity) {
@@ -73,5 +88,5 @@ public class ShoppingCartController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
+    }*/
 }
