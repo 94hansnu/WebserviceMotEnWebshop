@@ -1,6 +1,7 @@
 package WebserviceMotEnWebshop.demo.controller.ShoppingCart;
 
 import WebserviceMotEnWebshop.demo.database.entity.Article;
+import WebserviceMotEnWebshop.demo.database.entity.History;
 import WebserviceMotEnWebshop.demo.database.entity.ShoppingCartDetail;
 import WebserviceMotEnWebshop.demo.database.entity.User;
 import WebserviceMotEnWebshop.demo.database.service.ShopService;
@@ -71,4 +72,22 @@ public class ShoppingCartController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    //POST-förfrågan- Slutför köp och lägg till i historik
+    @PostMapping("/checkout")
+    public ResponseEntity<List<History>> checkout(Authentication authentication) {
+        String username = authentication.getName();
+
+        // Hämta innehållet i kundvagnen
+        List<ShoppingCartDetail> shoppingCart = shopService.getShoppingCart(username);
+
+        // Skapa historikposter baserat på kundvagnen
+        List<History> purchaseHistory = shopService.checkout(username, shoppingCart);
+
+        // Rensa kundvagnen efter genomfört köp
+        shopService.removeAllCartItems(username);
+
+        return ResponseEntity.ok(purchaseHistory);
+    }
+
 }

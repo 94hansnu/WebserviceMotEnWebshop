@@ -43,7 +43,7 @@ public class ArticleController {
     }
 
     //PUT-förfrågan- Uppdatera en artikel (ADMIN)
-    @PutMapping("/{articleId")
+    @PutMapping("/{articleId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Article> updateArticle(@PathVariable Long articleId, @RequestBody Article updatedArticle) {
         Article article  = articleService.updateArticle(articleId, updatedArticle);

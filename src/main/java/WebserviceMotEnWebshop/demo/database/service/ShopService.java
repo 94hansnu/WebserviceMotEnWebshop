@@ -2,13 +2,16 @@ package WebserviceMotEnWebshop.demo.database.service;
 
 import WebserviceMotEnWebshop.demo.database.entity.*;
 import WebserviceMotEnWebshop.demo.database.repository.*;
+import WebserviceMotEnWebshop.demo.service.HistoryService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,8 @@ public class ShopService {
     private final ShoppingCartDetailRepository shoppingCartDetailRepository;
     private final UserRepository userRepository;
     private final HistoryRepository historyRepository;
+    @Autowired
+    private HistoryService historyService;
     @PersistenceContext
     EntityManager entityManager;
 
@@ -39,7 +44,6 @@ public class ShopService {
     * TA BORT HELA KUNDKORG INNEHÅLL -------------------------------------------------- <4>
     * KÖP ALLT I HELA KUNDKORG (SPARA TILL HISTORY -> RADERA RADER I KUNDDETALJKORG) -- <5>
      */
-
 
 
 
@@ -164,5 +168,32 @@ public class ShopService {
     }
 
 
+    @Transactional
+    public List<History> checkout(String username, List<ShoppingCartDetail> shoppingCart) {
+        User user = getUser(username);
 
+        // Skapa historikposter baserat på innehållet i kundvagnen
+        List<History> purchaseHistory = new ArrayList<>();
+
+        for (ShoppingCartDetail cartDetail : shoppingCart) {
+            Article article = cartDetail.getArticle();
+            int quantity = cartDetail.getQuantity();
+
+            // Skapa en historikpost för varje artikel i kundvagnen
+            History history = new History();
+            history.setUser(user);
+            history.setArticle(article);
+            history.setPrice(article.getPrice());
+            history.setQuantity(quantity);
+
+            // Spara historikposten
+            History savedHistory = historyService.addHistory(history);
+            purchaseHistory.add(savedHistory);
+        }
+
+        // Rensa kundvagnen efter genomfört köp
+        removeAllCartItems(username);
+
+        return purchaseHistory;
+    }
 }
