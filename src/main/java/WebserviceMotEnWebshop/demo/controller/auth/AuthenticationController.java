@@ -25,6 +25,6 @@ public class AuthenticationController {
     }
     @PostMapping("/login-user")
     public LoginResponse login(@RequestBody Registration body) {
-        return authenticationService.loginUser(body.getUsername(), body.getPassword());
+        return authenticationService.login(body.getUsername(), body.getPassword());
     }
 }
