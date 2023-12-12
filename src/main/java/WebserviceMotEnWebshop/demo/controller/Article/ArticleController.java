@@ -1,6 +1,7 @@
 package WebserviceMotEnWebshop.demo.controller.Article;
 
 import WebserviceMotEnWebshop.demo.database.entity.Article;
+import WebserviceMotEnWebshop.demo.database.service.ShopService;
 import WebserviceMotEnWebshop.demo.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +16,13 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private ShopService shopService;
 
     //GET-förfrågan- Hämta alla artiklar (För alla användare)
     @GetMapping
-    public ResponseEntity<List<Article>> getAllArticles() {
-        List<Article> articles = articleService.getAllArticles();
+    public ResponseEntity<List<Article>> getAllArticles(@RequestParam String searchTerm) {
+        List<Article> articles = shopService.getArticles(searchTerm);
         return ResponseEntity.ok(articles);
     }
 

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -56,6 +57,32 @@ public class AuthenticationService {
 
         } catch(AuthenticationException e){
             return new LoginResponse(null, "");
+        }
+    }
+
+    public LoginResponse login(String username, String password) {
+        try {
+            Optional<User> optionalUser = userRepository.findByUsername(username);
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                if (passwordEncoder.matches(password, user.getPassword())) {
+                    Authentication auth = authenticationManager.authenticate(
+                            new UsernamePasswordAuthenticationToken(username, password)
+                    );
+                    String token = tokenService.generateJwt(auth);
+                    return new LoginResponse(user, token);
+                } else throw new RuntimeException("Felaktigt lösenord");
+            } else {
+                registerUser(username, password);
+                Optional<User> newUser = userRepository.findByUsername(username);
+                Authentication auth = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(username, password)
+                );
+                String token = tokenService.generateJwt(auth);
+                return new LoginResponse(newUser.get(), token);
+            }
+        } catch (AuthenticationException e) {
+            throw new RuntimeException("Misslyckades med authentisering");
         }
     }
 
