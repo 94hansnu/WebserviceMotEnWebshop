@@ -104,25 +104,26 @@ public class ShopService {
         Article article = getArticle(articleName);
         shoppingCartDetailRepository.deleteByArticle(article);
     }
-    @Transactional
-    public void buy(User user) { // <5>
-        User existingUser = getUser(user);
+    @Transactional // <5>
+    public List<History> buy(String username) {
+        User existingUser = getUser(username);
         ShoppingCart cart = getShoppingCart(existingUser);
+        List<History> historyList = new ArrayList<>();
 
         for (ShoppingCartDetail detail : cart.getCartDetail()) {
             History history = new History();
             history.setUser(existingUser);
-            Article article = getArticle(detail.getArticle());
+            Article article = getArticle(detail.getArticle().getName());
             history.setArticle(article);
             history.setPrice(article.getPrice());
             history.setQuantity(detail.getQuantity());
-            historyRepository.save(history);
+            historyList.add(historyRepository.save(history));
         }
-
         shoppingCartDetailRepository.deleteAllByCart(cart);
         cart.getCartDetail().clear();
         shoppingCartRepository.save(cart);
 
+        return historyList;
     }
     private Article getArticle(Article article) {
         Optional<Article> existingArticle = articleRepository.findById(article.getId());
