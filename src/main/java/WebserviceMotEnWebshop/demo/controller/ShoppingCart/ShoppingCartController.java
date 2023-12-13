@@ -47,6 +47,14 @@ public class ShoppingCartController {
         }
 
     }
+    @PostMapping("/")
+    public ResponseEntity<List<History>> buy(Authentication authentication) {
+        List<History> historyList = shopService.buy(authentication.getName());
+        if (historyList.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(shopService.buy(authentication.getName()));
+    }
     @DeleteMapping("/") // Tar bort EN rad i shoppingCartDetails av viss produkt baserat på produktnamn
     public ResponseEntity deleteOneRowOfArticles(@RequestParam String articleName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
