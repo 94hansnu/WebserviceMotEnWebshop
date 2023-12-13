@@ -15,6 +15,9 @@ public class ArticleService {
     @Autowired
     private ArticleRepository articleRepository;
 
+    public Optional<Article> findByName(String articleName) {
+        return articleRepository.findByName(articleName);
+    }
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }

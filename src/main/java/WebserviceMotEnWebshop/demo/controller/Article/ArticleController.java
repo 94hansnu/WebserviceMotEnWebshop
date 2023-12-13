@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/articles")
@@ -27,7 +28,22 @@ public class ArticleController {
     }
     @PostMapping("/create")
     public ResponseEntity<Article> create(@RequestBody Article article) {
+        Optional<Article> optionalArticle = articleService.findByName(article.getName());
+        if(optionalArticle.isPresent()) {
+            Article present = optionalArticle.get();
+            present.setPrice(article.getPrice());
+            present.setDescription(article.getDescription());
+            return ResponseEntity.ok(articleService.createArticle(present));
+        }
         return ResponseEntity.ok(articleService.createArticle(article));
+    }
+    @PutMapping("/update")
+    public ResponseEntity<Article> update(@RequestBody Article article) {
+        Optional<Article> isExsisting = articleService.findByName(article.getName());
+        if(isExsisting.isPresent())  {
+            return ResponseEntity.ok(articleService.createArticle(isExsisting.get()));
+        }
+        return ResponseEntity.notFound().build();
     }
 
     //GET-förfrågan- Hämta en specifik artikel (för alla användare)
