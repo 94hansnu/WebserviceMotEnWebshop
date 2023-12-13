@@ -47,7 +47,7 @@ public class ShoppingCartController {
         }
 
     }
-    @PostMapping("/")
+    @PostMapping("/buy")
     public ResponseEntity<List<History>> buy(Authentication authentication) {
         List<History> historyList = shopService.buy(authentication.getName());
         if (historyList.isEmpty()) {

@@ -25,6 +25,10 @@ public class ArticleController {
         List<Article> articles = shopService.getArticles(searchTerm);
         return ResponseEntity.ok(articles);
     }
+    @PostMapping("/create")
+    public ResponseEntity<Article> create(@RequestBody Article article) {
+        return ResponseEntity.ok(articleService.createArticle(article));
+    }
 
     //GET-förfrågan- Hämta en specifik artikel (för alla användare)
     @GetMapping("/{articleId}")
