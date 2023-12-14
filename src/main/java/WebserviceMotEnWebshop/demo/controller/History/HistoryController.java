@@ -30,7 +30,7 @@ public class HistoryController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
-    // Hämta historik för en specifik användare
+    // Hämta historik för en specifik användare (admin kan hämta allas och user kan bara hämta sin egen)
     @GetMapping("/user")
     public ResponseEntity<List<History>> getHistoryByUser(Authentication authentication) {
         String authenticatedUserId = authentication.getName();
@@ -58,6 +58,17 @@ public class HistoryController {
         // Kontrollera om användaren är admin innan du tillåter att hämta all historik
         if (isAdmin(authentication)) {
             List<History> histories = historyService.getAllHistory();
+            return ResponseEntity.ok(histories);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    //hämta historik för en specifik användare baserat på username (endast för admin)
+    @GetMapping("/user/{username}")
+    public ResponseEntity <List<History>> getHistoryByUsername(@PathVariable String username, Authentication authentication){
+        if (isAdmin(authentication)){
+            List <History> histories = historyService.getHistoryByUsername(username);
             return ResponseEntity.ok(histories);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

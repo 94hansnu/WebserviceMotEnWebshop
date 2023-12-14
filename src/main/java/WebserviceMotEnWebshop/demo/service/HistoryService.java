@@ -53,6 +53,14 @@ public class HistoryService {
         return historyRepository.findAll();
     }
 
+    public List <History> getHistoryByUsername(String username){
+        Optional <User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()){
+            throw new UsernameNotFoundException("Användaren hittades inte");
+        }
+        User existingUser = optionalUser.get();
+        return historyRepository.findByUser(existingUser);
+    }
 
 }
   /*  public List<History> getHistoryByUser(Long userId) {
