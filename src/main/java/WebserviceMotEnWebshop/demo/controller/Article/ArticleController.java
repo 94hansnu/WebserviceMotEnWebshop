@@ -6,6 +6,7 @@ import WebserviceMotEnWebshop.demo.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -78,14 +79,10 @@ public class ArticleController {
     }
 
     //DELETE-förfrågan- Radera en artikel (ADMIN)
-    @DeleteMapping("/{articleId}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteArticle(@PathVariable Long articleId) {
-        boolean deleted = articleService.deleteArticle(articleId);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @DeleteMapping("/")
+    public ResponseEntity deleteArticle(@RequestBody Article article, Authentication authentication) {
+
+        articleService.delete(article);
+        return ResponseEntity.ok(article);
     }
 }

@@ -18,6 +18,9 @@ public class ArticleService {
     public Optional<Article> findByName(String articleName) {
         return articleRepository.findByName(articleName);
     }
+    public void delete(Article article) {
+        articleRepository.delete(article);
+    }
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
     }
