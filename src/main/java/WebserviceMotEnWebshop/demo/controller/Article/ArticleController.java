@@ -79,9 +79,8 @@ public class ArticleController {
     }
 
     //DELETE-förfrågan- Radera en artikel (ADMIN)
-    @DeleteMapping("/")
+    @DeleteMapping("/delete")
     public ResponseEntity deleteArticle(@RequestBody Article article, Authentication authentication) {
-
         articleService.delete(article);
         return ResponseEntity.ok(article);
     }
