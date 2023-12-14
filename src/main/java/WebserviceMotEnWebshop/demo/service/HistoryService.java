@@ -28,7 +28,34 @@ public class HistoryService {
         // Implementation för att lägga till historik
         return historyRepository.save(history);
     }
-    public List<History> getHistoryByUser(Long userId) {
+
+   public List <History> getHistoryByUser(String username){
+        Optional <User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()){
+            throw new UsernameNotFoundException("Användaren hittades inte.");
+        }
+        User existingUser = optionalUser.get();
+        return historyRepository.findByUser(existingUser);
+   }
+
+   public List <History> getHistoryByArticle(String articleName){
+        //hämta all historik för en specifik artikel.
+       Optional <Article> optionalArticle = articleRepository.findByName(articleName);
+       if (optionalArticle.isEmpty()){
+           throw new RuntimeException("Artikel kunde inte hittas");
+       }
+       Article article = optionalArticle.get();
+       return historyRepository.findByArticle(article);
+   }
+
+    public List<History> getAllHistory() {
+        // Implementation för att hämta alla historiker
+        return historyRepository.findAll();
+    }
+
+
+}
+  /*  public List<History> getHistoryByUser(Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
         if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException("Användaren hittades inte.");
@@ -44,37 +71,10 @@ public class HistoryService {
         }
         Article existingArticle = optionalArticle.get();
         return historyRepository.findByArticle(existingArticle);
-    }
-
-  /*  public User getHistoryByUser(User user){
-        Optional<User> optionalUser = userRepository.findById(user.getId());
-        if (optionalUser.isEmpty()) throw new UsernameNotFoundException("Historik hittas inte.");
-
-        User existingUser = optionalUser.get();
-        return existingUser;
-    }
-
-
-    public Article getHistoryByArticle(Article article){
-        Optional<Article> existingArticle = articleRepository.findById(article.getId());
-
-        if (existingArticle.isEmpty()) {
-            throw new RuntimeException("Historik finns inte.");
-        }
-        Article fetchedArticle = existingArticle.get();
-        return fetchedArticle;
-    }*/
-
-    public List<History> getAllHistory() { // osäker om den ska vara kvar
-        // Implementation för att hämta alla historiker
-        return historyRepository.findAll();
-    }/*
-
-    public Optional<History> getHistoryById(Long id) { // osäker om den ska vara kvar
-        // Implementation för att hämta en historik med ett specifikt ID
-        return historyRepository.findById(id);
     }*/
 
 
 
-}
+
+
+
