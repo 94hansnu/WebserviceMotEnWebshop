@@ -1,4 +1,4 @@
-package WebserviceMotEnWebshop.demo.controller.History;
+package WebserviceMotEnWebshop.demo.controller;
 
 import WebserviceMotEnWebshop.demo.database.entity.History;
 

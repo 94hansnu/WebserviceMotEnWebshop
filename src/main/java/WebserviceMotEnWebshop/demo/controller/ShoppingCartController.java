@@ -1,4 +1,4 @@
-package WebserviceMotEnWebshop.demo.controller.ShoppingCart;
+package WebserviceMotEnWebshop.demo.controller;
 
 import WebserviceMotEnWebshop.demo.database.entity.Article;
 import WebserviceMotEnWebshop.demo.database.entity.History;
