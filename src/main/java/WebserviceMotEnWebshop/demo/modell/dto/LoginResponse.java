@@ -1,4 +1,4 @@
-package WebserviceMotEnWebshop.demo.modell;
+package WebserviceMotEnWebshop.demo.modell.dto;
 
 import WebserviceMotEnWebshop.demo.database.entity.User;
 

@@ -1,7 +1,7 @@
 package WebserviceMotEnWebshop.demo.controller;
 
 import WebserviceMotEnWebshop.demo.database.entity.Article;
-import WebserviceMotEnWebshop.demo.database.service.ShopService;
+import WebserviceMotEnWebshop.demo.service.ShopService;
 import WebserviceMotEnWebshop.demo.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

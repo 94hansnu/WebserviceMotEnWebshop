@@ -1,6 +1,5 @@
 package WebserviceMotEnWebshop.demo.security;
 
-import WebserviceMotEnWebshop.demo.modell.RSAKeyProperties;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -57,7 +56,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/auth/**", "/articles").permitAll();
-                    auth.requestMatchers("/Shoppingcart/**").hasAnyRole("USER", "ADMIN");
+                    auth.requestMatchers("/shoppingcart/**").hasAnyRole("USER", "ADMIN");
                     auth.requestMatchers("/history/**").hasRole("ADMIN");
                     auth.requestMatchers("/history/user").hasAnyRole("USER", "ADMIN");
                     auth.anyRequest().authenticated();

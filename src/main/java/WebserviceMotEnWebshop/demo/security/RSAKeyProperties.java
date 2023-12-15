@@ -1,4 +1,4 @@
-package WebserviceMotEnWebshop.demo.modell;
+package WebserviceMotEnWebshop.demo.security;
 
 import org.springframework.stereotype.Component;
 

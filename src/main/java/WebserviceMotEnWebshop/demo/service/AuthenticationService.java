@@ -4,7 +4,7 @@ import WebserviceMotEnWebshop.demo.database.entity.Role;
 import WebserviceMotEnWebshop.demo.database.entity.User;
 import WebserviceMotEnWebshop.demo.database.repository.RoleRepository;
 import WebserviceMotEnWebshop.demo.database.repository.UserRepository;
-import WebserviceMotEnWebshop.demo.modell.LoginResponse;
+import WebserviceMotEnWebshop.demo.modell.dto.LoginResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

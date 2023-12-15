@@ -2,8 +2,8 @@ package WebserviceMotEnWebshop.demo.controller;
 
 import WebserviceMotEnWebshop.demo.database.entity.User;
 import WebserviceMotEnWebshop.demo.service.AuthenticationService;
-import WebserviceMotEnWebshop.demo.modell.LoginResponse;
-import WebserviceMotEnWebshop.demo.modell.Registration;
+import WebserviceMotEnWebshop.demo.modell.dto.LoginResponse;
+import WebserviceMotEnWebshop.demo.modell.dto.Registration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

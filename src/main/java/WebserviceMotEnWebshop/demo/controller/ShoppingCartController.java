@@ -1,10 +1,8 @@
 package WebserviceMotEnWebshop.demo.controller;
 
-import WebserviceMotEnWebshop.demo.database.entity.Article;
 import WebserviceMotEnWebshop.demo.database.entity.History;
 import WebserviceMotEnWebshop.demo.database.entity.ShoppingCartDetail;
-import WebserviceMotEnWebshop.demo.database.entity.User;
-import WebserviceMotEnWebshop.demo.database.service.ShopService;
+import WebserviceMotEnWebshop.demo.service.ShopService;
 import WebserviceMotEnWebshop.demo.modell.dto.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/Shoppingcart")
+@RequestMapping("/shoppingcart")
 public class ShoppingCartController {
 
     @Autowired
