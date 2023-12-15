@@ -44,9 +44,9 @@ public class HistoryController {
 
     // Hämta historik för en specifik artikel
     @GetMapping("/article")
-    public ResponseEntity<List<History>> getHistoryByArticle(@RequestParam String articleName, Authentication authentication) {
+    public ResponseEntity<List<History>> getHistoryByArticle(@RequestParam String searchterm, Authentication authentication) {
         if (isAdmin(authentication)) {
-            List<History> histories = historyService.getHistoryByArticle(articleName);
+            List<History> histories = historyService.getHistoryByArticleOrUser(searchterm);
             return ResponseEntity.ok(histories);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

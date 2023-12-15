@@ -28,34 +28,40 @@ public class HistoryService {
         // Implementation för att lägga till historik
         return historyRepository.save(history);
     }
+    public List<History> getHistoryByArticleOrUser(String searchTerm) {
+        if (searchTerm.isEmpty() || searchTerm == null) {
+            return historyRepository.findAll();
+        }
+        return historyRepository.searchByArticleOrUser(searchTerm);
+    }
 
-   public List <History> getHistoryByUser(String username){
-        Optional <User> optionalUser = userRepository.findByUsername(username);
-        if (optionalUser.isEmpty()){
+    public List<History> getHistoryByUser(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException("Användaren hittades inte.");
         }
         User existingUser = optionalUser.get();
         return historyRepository.findByUser(existingUser);
-   }
+    }
 
-   public List <History> getHistoryByArticle(String articleName){
+    public List<History> getHistoryByArticle(String articleName) {
         //hämta all historik för en specifik artikel.
-       Optional <Article> optionalArticle = articleRepository.findByName(articleName);
-       if (optionalArticle.isEmpty()){
-           throw new RuntimeException("Artikel kunde inte hittas");
-       }
-       Article article = optionalArticle.get();
-       return historyRepository.findByArticle(article);
-   }
+        Optional<Article> optionalArticle = articleRepository.findByName(articleName);
+        if (optionalArticle.isEmpty()) {
+            throw new RuntimeException("Artikel kunde inte hittas");
+        }
+        Article article = optionalArticle.get();
+        return historyRepository.findByArticle(article);
+    }
 
     public List<History> getAllHistory() {
         // Implementation för att hämta alla historiker
         return historyRepository.findAll();
     }
 
-    public List <History> getHistoryByUsername(String username){
-        Optional <User> optionalUser = userRepository.findByUsername(username);
-        if (optionalUser.isEmpty()){
+    public List<History> getHistoryByUsername(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException("Användaren hittades inte");
         }
         User existingUser = optionalUser.get();

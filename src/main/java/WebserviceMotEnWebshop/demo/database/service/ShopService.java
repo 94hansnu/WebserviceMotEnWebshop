@@ -27,8 +27,6 @@ public class ShopService {
     private final HistoryRepository historyRepository;
     @Autowired
     private HistoryService historyService;
-    @PersistenceContext
-    EntityManager entityManager;
 
 
     /* Det skall finnas följande funktioner för shop:
