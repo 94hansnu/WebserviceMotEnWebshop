@@ -195,4 +195,17 @@ public class ShopService {
 
         return purchaseHistory;
     }
+
+
+    //Beräkna totala summan för hela köpet
+    @Transactional
+    public double totalCartAmount(String username) {
+        List<ShoppingCartDetail> cartDetails = getShoppingCart(username);
+        double totalAmount = 0.0;
+
+        for (ShoppingCartDetail cartDetail : cartDetails) {
+            totalAmount += cartDetail.getArticle().getPrice() * cartDetail.getQuantity();
+        }
+        return totalAmount;
+    }
 }

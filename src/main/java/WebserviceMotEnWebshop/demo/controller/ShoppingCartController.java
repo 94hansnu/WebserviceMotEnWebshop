@@ -96,4 +96,10 @@ public class ShoppingCartController {
         return ResponseEntity.ok(purchaseHistory);
     }
 
+    //GET-förfrågan - Beräkna totalbelopp för kundkorg
+    @GetMapping("/totalCartAmount")
+    public ResponseEntity<Double> totalCartAmount(@RequestParam String username) {
+        double totalAmount = shopService.totalCartAmount(username);
+        return ResponseEntity.ok(totalAmount);
+    }
 }
