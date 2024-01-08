@@ -97,8 +97,9 @@ public class ShoppingCartController {
     }
 
     //GET-förfrågan - Beräkna totalbelopp för kundkorg
-    @GetMapping("/totalCartAmount")
-    public ResponseEntity<Double> totalCartAmount(@RequestParam String username) {
+    @GetMapping("/amount")
+    public ResponseEntity<Double> totalCartAmount(Authentication authentication) {
+        String username = authentication.getName();
         double totalAmount = shopService.totalCartAmount(username);
         return ResponseEntity.ok(totalAmount);
     }

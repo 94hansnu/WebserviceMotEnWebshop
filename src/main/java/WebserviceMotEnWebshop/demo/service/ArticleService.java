@@ -19,7 +19,11 @@ public class ArticleService {
         return articleRepository.findByName(articleName);
     }
     public void delete(Article article) {
-        articleRepository.delete(article);
+        Optional<Article> deleteArticle = articleRepository.findByName(article.getName());
+        if (deleteArticle.isPresent()) {
+            articleRepository.deleteById(deleteArticle.get().getId());
+        }
+
     }
     public List<Article> getAllArticles() {
         return articleRepository.findAll();
