@@ -1,6 +1,6 @@
 # Webshop Application (Malmö)
 ## Description
-This project is a webshop application developed using Spring Boot and Vaadin. The application allows users to log in as either an admin or a regular user to perform various actions, including adding items, making purchases, and reviewing purchase history.
+This project is a webshop application developed using Spring Boot and Vaadin. The application allows users to login as either an admin or a regular user to perform various actions, including adding items, making purchases, and reviewing purchase history.
 
 ## Functionality
 Admin Functions
@@ -25,7 +25,7 @@ User Functions
 
 ## Usage
 * Open a web browser and navigate to 'http://localhost:8081'.
-* Log in as an admin or user using the existing credentials.
+* Login as an admin or user using the existing credentials.
 * Perform the desired functions that are available.
 
 ## Technology & Framework
