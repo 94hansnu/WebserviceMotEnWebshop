@@ -4,12 +4,12 @@ This project is a webshop application developed using Spring Boot and Vaadin. Th
 
 ## Functionality
 Admin Functions
-• Login as an admin and manage items in the webshop.
-• View a complete history of performed actions.
+* Login as an admin and manage items in the webshop.
+* View a complete history of performed actions.
 
 User Functions
-• Login as a user and add items to the shopping cart.
-• Complete purchases and review purchase history.
+* Login as a user and add items to the shopping cart.
+* Complete purchases and review purchase history.
 
 ## System Requirements
 • Ensure that you have Java 17 installed on your computer.
